@@ -13,6 +13,7 @@
 
 #pragma once
 
+#include "esphome/components/uart/uart.h"
 #include "esphome/components/binary_sensor/binary_sensor.h"
 #include "esphome/core/component.h"
 #include "esphome/core/defines.h"
@@ -50,7 +51,7 @@ namespace ratgdo {
     using protocol::Args;
     using protocol::Result;
 
-    class RATGDOComponent : public Component {
+    class RATGDOComponent : public Component, public uart::UARTDevice {
     public:
         RATGDOComponent()
         {

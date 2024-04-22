@@ -1,28 +1,25 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 import voluptuous as vol
+from esphome.components import uart
 from esphome import automation, pins
 from esphome.components import binary_sensor
-from esphome.const import CONF_ID, CONF_TRIGGER_ID
+from esphome.const import CONF_ID, CONF_TRIGGER_ID, CONF_RX_PIN, CONF_TX_PIN, CONF_UART_ID
+from esphome.core import CORE
+from esphome.cpp_generator import MockObj
 
-DEPENDENCIES = ["preferences"]
+DEPENDENCIES = ["preferences", "uart"]
 MULTI_CONF = True
 
 
 ratgdo_ns = cg.esphome_ns.namespace("ratgdo")
-RATGDO = ratgdo_ns.class_("RATGDOComponent", cg.Component)
+RATGDO = ratgdo_ns.class_("RATGDOComponent", cg.Component, uart.UARTDevice)
 
 
 SyncFailed = ratgdo_ns.class_("SyncFailed", automation.Trigger.template())
 
-CONF_OUTPUT_GDO = "output_gdo_pin"
-DEFAULT_OUTPUT_GDO = (
-    "D4"  # D4 red control terminal / GarageDoorOpener (UART1 TX) pin is D4 on D1 Mini
-)
-CONF_INPUT_GDO = "input_gdo_pin"
-DEFAULT_INPUT_GDO = (
-    "D2"  # D2 red control terminal / GarageDoorOpener (UART1 RX) pin is D2 on D1 Mini
-)
+# D4 red control terminal / GarageDoorOpener (UART1 TX) pin is D4 on D1 Mini
+# D2 red control terminal / GarageDoorOpener (UART1 RX) pin is D2 on D1 Mini
 CONF_INPUT_OBST = "input_obst_pin"
 DEFAULT_INPUT_OBST = "D7"  # D7 black obstruction sensor terminal
 
@@ -32,13 +29,14 @@ CONF_DISCRETE_CLOSE_PIN = "discrete_close_pin"
 CONF_RATGDO_ID = "ratgdo_id"
 
 CONF_ON_SYNC_FAILED = "on_sync_failed"
-
 CONF_PROTOCOL = "protocol"
 
 PROTOCOL_SECPLUSV1 = "secplusv1"
 PROTOCOL_SECPLUSV2 = "secplusv2"
 PROTOCOL_DRYCONTACT = "drycontact"
 SUPPORTED_PROTOCOLS = [PROTOCOL_SECPLUSV1, PROTOCOL_SECPLUSV2, PROTOCOL_DRYCONTACT]
+
+CONF_UART = "uart"
 
 CONF_DRY_CONTACT_OPEN_SENSOR = "dry_contact_open_sensor"
 CONF_DRY_CONTACT_CLOSE_SENSOR = "dry_contact_close_sensor"
@@ -97,8 +95,16 @@ CONFIG_SCHEMA = cv.All(
                 binary_sensor.BinarySensor
             ),
         }
-    ).extend(cv.COMPONENT_SCHEMA),
+    ).extend(uart.UART_DEVICE_SCHEMA).extend(cv.COMPONENT_SCHEMA),
     validate_protocol,
+)
+
+FINAL_VALIDATE_SCHEMA = uart.final_validate_device_schema(
+    "ratgdo",
+    require_tx=True,
+    require_rx=True,
+    data_bits=8,
+    stop_bits=1,
 )
 
 RATGDO_CLIENT_SCHMEA = cv.Schema(
@@ -113,13 +119,25 @@ async def register_ratgdo_child(var, config):
     cg.add(var.set_parent(parent))
 
 
+def get_uart_config(uart_id):
+    uarts = CORE.config.get(CONF_UART, {})
+    for uart in uarts:
+        if uart.get(CONF_ID, None) == uart_id:
+            return uart
+    raise cv.Invalid(f"UART id '{uart_id}' not found")
+
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
-    pin = await cg.gpio_pin_expression(config[CONF_OUTPUT_GDO])
-    cg.add(var.set_output_gdo_pin(pin))
-    pin = await cg.gpio_pin_expression(config[CONF_INPUT_GDO])
-    cg.add(var.set_input_gdo_pin(pin))
+    await uart.register_uart_device(var, config)
+    uart_config = get_uart_config(config[CONF_UART_ID])
+    # the pins have already been declared by the UART;
+    # we just need to figure out their variable names
+    # to pass them directly to our component
+    pin_id = uart_config[CONF_TX_PIN][CONF_ID]
+    cg.add(var.set_output_gdo_pin(MockObj(pin_id)))
+    pin_id = uart_config[CONF_RX_PIN][CONF_ID]
+    cg.add(var.set_input_gdo_pin(MockObj(pin_id)))
     if config.get(CONF_INPUT_OBST):
         pin = await cg.gpio_pin_expression(config[CONF_INPUT_OBST])
         cg.add(var.set_input_obst_pin(pin))
@@ -142,12 +160,7 @@ async def to_code(config):
 
     cg.add_library(
         name="secplus",
-        repository="https://github.com/ratgdo/secplus#f98c3220356c27717a25102c0b35815ebbd26ccc",
-        version=None,
-    )
-    cg.add_library(
-        name="espsoftwareserial",
-        repository="https://github.com/ratgdo/espsoftwareserial#autobaud",
+        repository="https://github.com/ccutrer/secplus#master",
         version=None,
     )
 

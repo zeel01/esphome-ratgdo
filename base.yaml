@@ -17,6 +17,11 @@ safe_mode:
 preferences:
   flash_write_interval: 1min
 
+uart:
+  rx_pin: ${uart_rx_pin}
+  tx_pin: ${uart_tx_pin}
+  baud_rate: 9600
+
 text_sensor:
   - platform: version
     id: ${id_prefix}_firmware_version
@@ -24,8 +29,6 @@ text_sensor:
 
 ratgdo:
   id: ${id_prefix}
-  input_gdo_pin: ${uart_rx_pin}
-  output_gdo_pin: ${uart_tx_pin}
   input_obst_pin: ${input_obst_pin}
   on_sync_failed:
     then:
