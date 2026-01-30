@@ -20,14 +20,14 @@ SyncFailed = ratgdo_ns.class_("SyncFailed", automation.Trigger.template())
 
 CONF_OUTPUT_GDO = "output_gdo_pin"
 DEFAULT_OUTPUT_GDO = (
-    "D4"  # D4 red control terminal / GarageDoorOpener (UART1 TX) pin is D4 on D1 Mini
+    "GPIO4"  # D4 red control terminal / GarageDoorOpener (UART1 TX) pin is D4 on D1 Mini
 )
 CONF_INPUT_GDO = "input_gdo_pin"
 DEFAULT_INPUT_GDO = (
-    "D2"  # D2 red control terminal / GarageDoorOpener (UART1 RX) pin is D2 on D1 Mini
+    "GPIO2"  # D2 red control terminal / GarageDoorOpener (UART1 RX) pin is D2 on D1 Mini
 )
 CONF_INPUT_OBST = "input_obst_pin"
-DEFAULT_INPUT_OBST = "D7"  # D7 black obstruction sensor terminal
+DEFAULT_INPUT_OBST = "GPIO7"  # D7 black obstruction sensor terminal
 
 CONF_DISCRETE_OPEN_PIN = "discrete_open_pin"
 CONF_DISCRETE_CLOSE_PIN = "discrete_close_pin"
