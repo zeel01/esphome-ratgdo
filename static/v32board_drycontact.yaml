@@ -33,7 +33,7 @@ dashboard_import:
 packages:
   remote_package:
     url: https://github.com/zeel01/esphome-ratgdo
-    ref: main
+    ref: idf
     files: [base_drycontact.yaml]
     refresh: 1s
   # remote_package: !include

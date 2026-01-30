@@ -92,7 +92,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/zeel01/esphome-ratgdo
-      ref: main
+      ref: idf
     refresh: 1s
 """
         workspace_path = tmp_path / "workspace"
@@ -122,7 +122,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/zeel01/esphome-ratgdo
-      ref: main
+      ref: idf
     refresh: 1s
 """
         yaml_file = tmp_path / "test.yaml"
@@ -139,7 +139,7 @@ external_components:
         assert f"path: {tmp_path}/components" in updated_content
         assert "type: git" not in updated_content
         assert "url: https://github.com/zeel01/esphome-ratgdo" not in updated_content
-        assert "ref: main" not in updated_content
+        assert "ref: idf" not in updated_content
 
     def test_update_remote_package_to_local_include(self, tmp_path):
         """Test updating remote_package to use local include."""
@@ -147,7 +147,7 @@ external_components:
 packages:
   remote_package:
     url: https://github.com/zeel01/esphome-ratgdo
-    ref: main
+    ref: idf
     files: [base.yaml]
     refresh: 1s
 """
@@ -164,7 +164,7 @@ packages:
         assert f"- !include {tmp_path}/base.yaml" in updated_content
         assert "remote_package:" not in updated_content
         assert "url: https://github.com/zeel01/esphome-ratgdo" not in updated_content
-        assert "ref: main" not in updated_content
+        assert "ref: idf" not in updated_content
 
     def test_remove_dashboard_import_package_url(self, tmp_path):
         """Test removing package_import_url from dashboard_import."""
@@ -191,7 +191,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/zeel01/esphome-ratgdo
-      ref: main
+      ref: idf
     refresh: 1s
 
 dashboard_import:
@@ -200,7 +200,7 @@ dashboard_import:
 packages:
   remote_package:
     url: https://github.com/zeel01/esphome-ratgdo
-    ref: main
+    ref: idf
     files: [base.yaml]
     refresh: 1s
 """
@@ -233,7 +233,7 @@ external_components:
   - source:
       type: git
       url: https://github.com/zeel01/esphome-ratgdo
-      ref: main
+      ref: idf
 
 button:
   - platform: template
@@ -264,7 +264,7 @@ button:
 packages:
   some_other_package:
     url: https://github.com/other/repo
-    ref: main
+    ref: idf
 """
         yaml_file = tmp_path / "test.yaml"
         yaml_file.write_text(yaml_content)
