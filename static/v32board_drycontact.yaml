@@ -28,7 +28,7 @@ esp32:
     type: esp-idf
 
 dashboard_import:
-  package_import_url: github://zeel01/esphome-ratgdo/v32board_drycontact.yaml@main
+  package_import_url: github://zeel01/esphome-ratgdo/v32board_drycontact.yaml@idf
 
 packages:
   remote_package:

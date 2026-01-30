@@ -170,7 +170,7 @@ packages:
         """Test removing package_import_url from dashboard_import."""
         yaml_content = """
 dashboard_import:
-  package_import_url: github://zeel01/esphome-ratgdo/v2board.yaml@main
+  package_import_url: github://zeel01/esphome-ratgdo/v2board.yaml@idf
 """
         yaml_file = tmp_path / "test.yaml"
         yaml_file.write_text(yaml_content)
@@ -195,7 +195,7 @@ external_components:
     refresh: 1s
 
 dashboard_import:
-  package_import_url: github://zeel01/esphome-ratgdo/v25board.yaml@main
+  package_import_url: github://zeel01/esphome-ratgdo/v25board.yaml@idf
 
 packages:
   remote_package:

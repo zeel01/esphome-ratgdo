@@ -27,7 +27,7 @@ esp32:
     type: esp-idf
 
 dashboard_import:
-  package_import_url: github://zeel01/esphome-ratgdo/v2board_esp32_lolin_s2_mini.yaml@main
+  package_import_url: github://zeel01/esphome-ratgdo/v2board_esp32_lolin_s2_mini.yaml@idf
 
 packages:
   remote_package:

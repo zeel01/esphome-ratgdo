@@ -118,7 +118,7 @@ jobs:
           echo "Changes made:"
           git diff --color=always
       - name: Build firmware
-        uses: ratgdo/esphome-build-action@main
+        uses: ratgdo/esphome-build-action@idf
         id: esphome-build
         with:
           yaml-file: ${{ matrix.firmware.file }}

@@ -28,7 +28,7 @@ esp32:
     type: esp-idf
 
 dashboard_import:
-  package_import_url: github://zeel01/esphome-ratgdo/v25board_esp32_d1_mini_secplusv1.yaml@main
+  package_import_url: github://zeel01/esphome-ratgdo/v25board_esp32_d1_mini_secplusv1.yaml@idf
 
 packages:
   remote_package:

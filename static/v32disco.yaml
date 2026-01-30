@@ -30,7 +30,7 @@ esp32:
     type: esp-idf
 
 dashboard_import:
-  package_import_url: github://zeel01/esphome-ratgdo/v32disco.yaml@main
+  package_import_url: github://zeel01/esphome-ratgdo/v32disco.yaml@idf
 
 packages:
   remote_package:
